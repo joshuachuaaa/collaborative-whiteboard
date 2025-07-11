@@ -13,7 +13,7 @@
 
 |  |  |
 |---|---|
-| 🖊️ Smooth pressure-aware strokes | Catmull-Rom spline smoothing @ 60 FPS |
+| 🖊️ Smooth strokes | Catmull-Rom spline smoothing @ 60 FPS |
 | 🔴 Live multi-user view | WebSocket ⇄ Redis Pub/Sub fan-out (no sticky sessions) |
 | ↩️ Undo / Redo | Stroke-level history, per user |
 | 🧹 Eraser & hit-testing | Spatial R-tree keeps O(1) responsiveness |
