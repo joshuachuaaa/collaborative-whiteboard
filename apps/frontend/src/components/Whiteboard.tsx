@@ -7,7 +7,7 @@ import './whiteboard.css'
 
 
 export default function Whiteboard() {
-  const { strokes, startStroke, addPoint, mergeStroke, endStroke, isDrawing} = useBoard();
+  const { strokes, startStroke, addPoint, mergeStroke, endStroke, isDrawing, color} = useBoard();
 
   // ─── WebSocket ────────────────────────────────
   const { send, connected } = useWebSocket('ws://localhost:8000/ws', mergeStroke);
@@ -51,12 +51,12 @@ export default function Whiteboard() {
         onMouseDown={() => {
           activeId.current = uuid();
           const [x, y] = pointerPos();
-          startStroke(activeId.current, x, y, '#1e40af', 2);
+          startStroke(activeId.current, x, y, color, 2);
 
           // Tell the server a new stroke started
           send({
             kind: 'stroke-start',
-            stroke: { id : activeId.current, color: '#1e40af', width: 2 },
+            stroke: { id : activeId.current, color, width: 2 },
             first: [x, y],
             });
         }}

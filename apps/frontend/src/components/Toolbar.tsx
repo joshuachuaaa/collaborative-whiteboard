@@ -1,27 +1,18 @@
 import { useState } from "react";
 import { Palette } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "./ui/button.tsx";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover";
-import { Slider } from "@/components/ui/slider";
-import { useBoard } from "../store";
-
-/**
- * Ultra-minimal toolbar: just colour picker + brush-width slider.
- * Sits bottom-left, semi-transparent; no erase/clear logic.
- */
+} from "./ui/popover.tsx";
+import { Slider } from "./ui/slider.tsx";
+import { useBoard } from "../store.ts";
+import "./toolbar.css";          // ⬅️ import the Tailwind helpers
 
 const preset = [
-  "#1e40af", // indigo-800 (default)
-  "#ef4444", // red-500
-  "#22c55e", // green-500
-  "#eab308", // yellow-500
-  "#0ea5e9", // sky-500
-  "#000000", // black
-  "#ffffff", // white
+  "#1e40af", "#ef4444", "#22c55e",
+  "#eab308", "#0ea5e9", "#000000", "#ffffff",
 ];
 
 export default function Toolbar() {
@@ -29,27 +20,24 @@ export default function Toolbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="fixed bottom-4 left-4 z-20 flex items-center gap-4 rounded-xl bg-white/70 backdrop-blur px-4 py-2 shadow-lg">
+    <div className="toolbar-sm">        {/* single utility class */}
       {/* Colour palette */}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button size="icon" variant="ghost" className="hover:bg-slate-200">
-            <Palette className="h-5 w-5" />
+            <Palette className="h-20 w-20" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48 grid grid-cols-7 gap-2">
+        <PopoverContent className="w-72 grid grid-cols-7 gap-4 border border-s-black">
           {preset.map((c) => (
             <button
               key={c}
-              className="h-6 w-6 rounded-full border-2"
+              className="h-[40px] w-[40px] rounded-lg mx-10"
               style={{
                 backgroundColor: c,
                 borderColor: c === color ? "#000" : "transparent",
               }}
-              onClick={() => {
-                setColor(c);
-                setOpen(false);
-              }}
+              onClick={() => { setColor(c); setOpen(false); }}
             />
           ))}
         </PopoverContent>

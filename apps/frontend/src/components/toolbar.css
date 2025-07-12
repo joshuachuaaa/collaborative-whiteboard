@@ -1,0 +1,39 @@
+/* Container */
+.toolbar {
+  @apply fixed bottom-4 left-4 z-20 flex items-center gap-6 rounded-2xl bg-white/70 backdrop-blur px-16 py-12 shadow-xl;
+}
+
+/* Large circular icon‑button */
+.btn-icon-lg {
+  @apply h-14 w-14 flex items-center justify-center rounded-full border bg-white text-slate-800 hover:bg-slate-200 transition;
+}
+.btn-icon-lg-active {
+  @apply bg-slate-800 text-white;
+}
+
+/* SVG inside the icon button */
+.icon-lg {
+  @apply h-8 w-8;
+}
+
+/* Colour swatch buttons */
+.swatch-lg {
+  @apply h-12 w-12 rounded-full border-4 transition;
+}
+.swatch-selected {
+  @apply border-slate-800;
+}
+.swatch-unselected {
+  @apply border-transparent;
+}
+
+/* Slider (Radix layer classes) */
+.slider-track-lg {
+  @apply h-3 rounded-full bg-slate-300;
+}
+.slider-range-lg {
+  @apply rounded-full bg-slate-600;
+}
+.slider-thumb-lg {
+  @apply h-6 w-6 rounded-full bg-slate-600 focus:outline-none;
+}
