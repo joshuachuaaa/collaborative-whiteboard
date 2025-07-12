@@ -1,5 +1,6 @@
 import { create, type StoreApi } from 'zustand'
 import { v4 as uuid } from 'uuid'
+import type { StrokeMsg } from './types'
 
 export interface Stroke {
   id: string
@@ -9,7 +10,7 @@ export interface Stroke {
   done?: boolean            // mark finished on pointer-up
 }
 
-interface State {
+export interface State {
   strokes: Record<string, Stroke>   // key = stroke.id
   currentId: string | null          // which stroke am I drawing?
   isDrawing: boolean
@@ -57,5 +58,30 @@ export const useBoard = create<State>()((set: SetFn, _get: GetFn) => ({
       currentId: null,
       strokes: { ...s.strokes, [stroke.id]: stroke }
     }
-  })
+  }),
+  mergeStroke: (m: StrokeMsg) =>
+    set((s:State) => {
+      switch (m.kind) {
+        case 'stroke-start':
+          return {
+            strokes: {
+              ...s.strokes,
+              [m.stroke.id]: { ...m.stroke, points: [...m.first] }
+            }
+          };
+        case 'stroke-points': {
+          const t = s.strokes[m.id];
+          if (!t) return s;
+          t.points.push(...m.pts);                       // append ↑
+          return { strokes: { ...s.strokes, [m.id]: t } };
+        }
+        case 'stroke-end': {
+          const t = s.strokes[m.id];
+          if (!t) return s;
+          t.done = true;
+          return { strokes: { ...s.strokes, [m.id]: t } };
+        }
+      }
+    }),
+
 }))
