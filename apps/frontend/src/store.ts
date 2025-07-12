@@ -42,11 +42,17 @@ export const useBoard = create<State>()((set: SetFn, _get: GetFn) => ({
 },
 
   // pointer-move
-  addPoint: (x:number, y:number) => set((s:State) => {
+addPoint: (x: number, y: number) =>
+  set(s => {
     if (!s.isDrawing || !s.currentId) return s
     const stroke = s.strokes[s.currentId]
-    stroke.points.push(x, y)
-    return { strokes: { ...s.strokes, [stroke.id]: stroke } }
+    const newPoints = [...stroke.points, x, y]
+    return {
+      strokes: {
+        ...s.strokes,
+        [stroke.id]: { ...stroke, points: newPoints }
+      }
+    }
   }),
 
   // pointer-up 
@@ -59,29 +65,43 @@ export const useBoard = create<State>()((set: SetFn, _get: GetFn) => ({
       strokes: { ...s.strokes, [stroke.id]: stroke }
     }
   }),
-  mergeStroke: (m: StrokeMsg) =>
-    set((s:State) => {
-      switch (m.kind) {
-        case 'stroke-start':
-          return {
-            strokes: {
-              ...s.strokes,
-              [m.stroke.id]: { ...m.stroke, points: [...m.first] }
+mergeStroke: (msg: StrokeMsg) =>
+  set(s => {
+    switch (msg.kind) {
+      case 'stroke-start':
+        return {
+          strokes: {
+            ...s.strokes,
+            [msg.stroke.id]: {
+              ...msg.stroke,
+              points: [...msg.first]    
             }
-          };
-        case 'stroke-points': {
-          const t = s.strokes[m.id];
-          if (!t) return s;
-          t.points.push(...m.pts);                       // append ↑
-          return { strokes: { ...s.strokes, [m.id]: t } };
-        }
-        case 'stroke-end': {
-          const t = s.strokes[m.id];
-          if (!t) return s;
-          t.done = true;
-          return { strokes: { ...s.strokes, [m.id]: t } };
-        }
-      }
-    }),
+          }
+        };
 
+      case 'stroke-points': {
+        const t = s.strokes[msg.id];
+        if (!t) return s;                    
+        // copy + append
+        const newPts = [...t.points, ...msg.pts];
+        return {
+          strokes: {
+            ...s.strokes,
+            [t.id]: { ...t, points: newPts }
+          }
+        };
+      }
+
+      case 'stroke-end': {
+        const t = s.strokes[msg.id];
+        if (!t) return s;
+        return {
+          strokes: {
+            ...s.strokes,
+            [t.id]: { ...t, done: true }
+          }
+        };
+      }
+    }
+  }),
 }))

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "konva": "^9.3.22",
+    "lodash-es": "^4.17.21",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-konva": "^19.0.7",

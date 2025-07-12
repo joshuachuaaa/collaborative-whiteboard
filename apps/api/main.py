@@ -1,5 +1,5 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-import asyncio, json, os, uuid, redis.asyncio as redis
+import asyncio, json, os, uuid as redis
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379/0")
 CHANNEL   = "ink-events"
@@ -14,7 +14,7 @@ async def health():
 @app.websocket("/ws")
 async def ws_endpoint(ws: WebSocket):
     await ws.accept()
-    cid = uuid.uuid4().hex                # unique per socket
+    cid = redis.uuid4().hex                # unique per socket
 
     # Create ONE subscription for THIS socket
     sub = redis_pool.pubsub()

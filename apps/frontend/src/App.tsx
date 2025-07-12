@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Whiteboard from './components/Whiteboard'
 import './App.css'
 
