@@ -17,6 +17,10 @@ export interface State {
   addPoint:  (x: number, y: number) => void
   endStroke: () => void
   mergeStroke : (msg: StrokeMsg) => void
+  color:string
+  width:number
+  setColor:(clr:string) => void
+  setWidth: (clr: number) => void
 }
 
 
@@ -27,10 +31,24 @@ export const useBoard = create<State>()((set: SetFn, _get: GetFn) => ({
   strokes: {},
   currentId: null,
   isDrawing: false,
+  color: "#000000",
+  width: 100,
+
+  setColor: (_color: string) =>
+      set((state) => ({
+        ...state,
+        color: _color
+      })),
+  setWidth: (_width: number) =>
+      set((state) => ({
+        ...state,
+        width:_width
+      })),
 
   // pointer-down
   startStroke: (id:string, x:number, y:number, color:string, width:number) => {
     set((s:State) => ({
+      ...s,
       isDrawing: true,
       currentId: id,
       strokes: {
