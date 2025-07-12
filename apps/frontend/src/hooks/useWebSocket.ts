@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import type { StrokeMsg } from '../types';
+import type { StrokeMsg } from '../types.ts';
 
 export interface UseWebSocket {
   connected: boolean;

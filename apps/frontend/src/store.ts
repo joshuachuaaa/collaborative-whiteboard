@@ -1,5 +1,5 @@
 import { create, type StoreApi } from 'zustand'
-import type { StrokeMsg } from './types'
+import type { StrokeMsg } from './types.ts'
 
 export interface Stroke {
   id: string

@@ -1,7 +1,7 @@
 import { Stage, Layer, Line } from 'react-konva';
 import { useRef, useState, useEffect } from 'react';
-import { useBoard } from '../store';
-import useWebSocket from '../hooks/useWebSocket';
+import { useBoard } from '../store.ts';
+import useWebSocket from '../hooks/useWebSocket.ts';
 import { v4 as uuid } from 'uuid'
 import './whiteboard.css'
 
