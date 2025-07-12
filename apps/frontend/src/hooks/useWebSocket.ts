@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import type { StrokeMsg } from '../types';
 
 export interface UseWebSocket {
   connected: boolean;
   send: (data: unknown) => void;
 }
 
-export default function useWebSocket(url: string): UseWebSocket {
+export default function useWebSocket(url: string, onMessage?: (data: StrokeMsg) => void): UseWebSocket {
   const socketRef = useRef<WebSocket>(null);
   const [connected, setConnected] = useState(false);
 
@@ -25,13 +26,23 @@ export default function useWebSocket(url: string): UseWebSocket {
     const ws = new WebSocket(url);
     socketRef.current = ws;
 
-    ws.onopen    = () => setConnected(true);console.log('connected')
+    ws.onopen = () => {
+      setConnected(true);
+      console.log('connected');};
     ws.onclose   = () => setConnected(false);
     ws.onerror   = e  => console.error('WebSocket error', e);
-    ws.onmessage = e  => console.log('Message from server', e.data);
+    ws.onmessage = e => {
+    try {
+      const msg = JSON.parse(e.data);
+      onMessage?.(msg);
+      console.log(msg)
+    } catch (err) {
+      console.warn('Bad WS payload', err);
+    }
+  };
 
     return () => ws.close();
-  }, [url]);
+  }, [url, onMessage]);
 
   return { connected, send };
 }

@@ -2,17 +2,21 @@ import { Stage, Layer, Line } from 'react-konva';
 import { useRef, useState, useEffect } from 'react';
 import { useBoard } from '../store';
 import useWebSocket from '../hooks/useWebSocket';
+import { v4 as uuid } from 'uuid'
+import './whiteboard.css'
+
 
 export default function Whiteboard() {
-  const { strokes, startStroke, addPoint, endStroke, isDrawing } = useBoard();
+  const { strokes, startStroke, addPoint, mergeStroke, endStroke, isDrawing} = useBoard();
 
   // ─── WebSocket ────────────────────────────────
-  const { send, connected } = useWebSocket('ws://localhost:8000/ws');
+  const { send, connected } = useWebSocket('ws://localhost:8000/ws', mergeStroke);
 
   // ─── Drawing timing overlay ───────────────────
   const stageRef = useRef<any>(null);
   const [avgMs, setAvgMs] = useState(0);
   const stats = useRef({ lastT: performance.now(), sum: 0, count: 0 });
+  const activeId = useRef<string | null>(null);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -33,11 +37,7 @@ export default function Whiteboard() {
   return (
     <>
       {/* Overlay: timing + socket status */}
-      <div style={{
-        position: 'fixed', top: 8, left: 8, zIndex: 10,
-        padding: '4px 8px', background: 'rgba(0,0,0,.6)',
-        color: '#fff', fontFamily: 'monospace', borderRadius: 4,
-      }}>
+      <div className='metrics'>
         {avgMs.toFixed(1)}ms&nbsp;/sample&nbsp;•&nbsp;
         {connected ? 'socket ✓' : 'socket ✗'}
       </div>
@@ -47,13 +47,18 @@ export default function Whiteboard() {
         width={window.innerWidth}
         height={window.innerHeight}
         ref={stageRef}
+
         onMouseDown={() => {
+          activeId.current = uuid();
           const [x, y] = pointerPos();
-          startStroke(x, y, '#1e40af', 2);
-          stats.current.lastT = performance.now();
+          startStroke(activeId.current, x, y, '#1e40af', 2);
 
           // Tell the server a new stroke started
-          send({ type: 'stroke-start', x, y });
+          send({
+            kind: 'stroke-start',
+            stroke: { id : activeId.current, color: '#1e40af', width: 2 },
+            first: [x, y],
+            });
         }}
         onMouseMove={() => {
           if (isDrawing == true){
@@ -66,13 +71,14 @@ export default function Whiteboard() {
           stats.current.lastT = now;
 
           // Stream points to the server (optional – comment out if too chatty)
-          send({ type: 'stroke-point', x, y });
-
+          send({ kind: 'stroke-points', id: activeId.current, pts: [x, y] });
           }
         }}
         onMouseUp={() => {
+          if (!activeId.current) return;
           endStroke();
-          send({ type: 'stroke-end' });
+          send({ kind: 'stroke-end', id: activeId.current });
+          activeId.current = null;
         }}
       >
         <Layer>

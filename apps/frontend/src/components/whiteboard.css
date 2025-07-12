@@ -1,0 +1,11 @@
+.metrics {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  padding: 4px 8px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-family: monospace;
+  border-radius: 4px;
+}
