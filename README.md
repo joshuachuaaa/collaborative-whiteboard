@@ -41,7 +41,7 @@ To be added
 ## Getting Started (local)
 
 ```bash
-git clone https://github.com/<you>/whiteboard.git
+git clone https://github.com/joshuachuaaa/collaborative-whiteboard
 cd whiteboard
 
 # build + run API & Redis
