@@ -1,3 +1,4 @@
+@reference "../index.css";
 /* Container */
 .toolbar {
   @apply fixed bottom-4 left-4 z-20 flex items-center gap-6 rounded-2xl bg-white/70 backdrop-blur px-16 py-12 shadow-xl;
@@ -5,7 +6,7 @@
 
 /* Large circular icon‑button */
 .btn-icon-lg {
-  @apply h-14 w-14 flex items-center justify-center rounded-full border bg-white text-slate-800 hover:bg-slate-200 transition;
+  @apply h-20 w-20 flex items-center justify-center rounded-full border bg-white text-slate-800 hover:bg-slate-200 transition;
 }
 .btn-icon-lg-active {
   @apply bg-slate-800 text-white;
@@ -13,7 +14,7 @@
 
 /* SVG inside the icon button */
 .icon-lg {
-  @apply h-8 w-8;
+  @apply h-20 w-20;
 }
 
 /* Colour swatch buttons */

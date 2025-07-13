@@ -9,6 +9,7 @@ export interface UseWebSocket {
 export default function useWebSocket(url: string, onMessage?: (data: StrokeMsg) => void): UseWebSocket {
   const socketRef = useRef<WebSocket>(null);
   const [connected, setConnected] = useState(false);
+  
 
   //send helper
   const send = useCallback(
@@ -28,8 +29,10 @@ export default function useWebSocket(url: string, onMessage?: (data: StrokeMsg) 
 
     ws.onopen = () => {
       setConnected(true);
-      console.log('connected');};
-    ws.onclose   = () => setConnected(false);
+    };
+    ws.onclose   = () => {
+      setConnected(false);
+    }
     ws.onerror   = e  => console.error('WebSocket error', e);
     ws.onmessage = e => {
     try {

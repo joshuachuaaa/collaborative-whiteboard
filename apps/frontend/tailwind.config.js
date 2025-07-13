@@ -5,5 +5,6 @@ export default {
     "./src/**/*.{ts,tsx}"
   ],
   theme: { extend: {} },
+  corePlugins: {inset: true,position: true,  },
   plugins: []
 }

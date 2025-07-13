@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { Palette } from "lucide-react";
 import { Button } from "./ui/button.tsx";
+import { Undo } from "lucide-react";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from "./ui/popover.tsx";
 import { Slider } from "./ui/slider.tsx";
-import { useBoard } from "../store.ts";
-import "./toolbar.css";          // ⬅️ import the Tailwind helpers
+import "./toolbar.css";         
+import { bus } from '../bus.ts';
+import { useBoard } from '../store/store.ts';
+
 
 const preset = [
   "#1e40af", "#ef4444", "#22c55e",
@@ -16,15 +19,22 @@ const preset = [
 ];
 
 export default function Toolbar() {
-  const { color, width, setColor, setWidth } = useBoard();
+  const { color, width, setColor, setWidth, ownerId, undoLast, getLastStrokeId } = useBoard();
   const [open, setOpen] = useState(false);
+
+  const handleUndo = () => {
+    const id = getLastStrokeId(ownerId);
+    if (!id) return;
+    undoLast(ownerId);                         // local state change
+    bus.emit('outbound', { kind: 'undo', id }); // network frame
+  };
 
   return (
     <div className="toolbar-sm">        {/* single utility class */}
       {/* Colour palette */}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button size="icon" variant="ghost" className="hover:bg-slate-200">
+          <Button size="lg" variant="ghost" className="hover:bg-slate-200">
             <Palette className="h-20 w-20" />
           </Button>
         </PopoverTrigger>
@@ -53,6 +63,9 @@ export default function Toolbar() {
           onValueChange={([w]) => setWidth(w)}
         />
       </div>
+        <Button onClick={handleUndo}>
+          <Undo className="h-5 w-5" />
+        </Button>
     </div>
   );
 }
