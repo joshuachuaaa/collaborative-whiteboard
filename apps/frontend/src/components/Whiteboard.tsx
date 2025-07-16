@@ -82,9 +82,18 @@ export default function Whiteboard() {
     if (!activeId.current) return;
 
     endStroke();
-    bus.emit('outbound', { kind: 'stroke-end', id: activeId.current });
+    bus.emit('outbound', {
+      kind:  'stroke-end',
+      id   : activeId.current,
+      stroke: {
+        id:      activeId.current,
+        ownerId,          
+        color,
+        width
+      }
+    });    
     activeId.current = null;
-  };
+      };
 
   /* ---------- UI ---------- */
   return (

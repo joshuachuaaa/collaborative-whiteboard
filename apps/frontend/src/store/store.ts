@@ -202,9 +202,33 @@ export const useBoard = create<State>((set, get) => ({
                     },
                 };
             }
+            case 'stroke-full': {
+                const st = msg.stroke;               // renamed variable
+                return {
+                strokes: {
+                    ...s.strokes,
+                    [st.id]: st,
+                },
+                history: {
+                    ...s.history,
+                    [st.ownerId]: [...(s.history[st.ownerId] ?? []), st.id],
+                },
+                };
+            }
 
-            default : 
+            case 'stroke-snapshot': {
+                const t = s.strokes[msg.id];
+                if (!t) return s;                    // base stroke hasn’t arrived yet
+                return {
+                strokes: {
+                    ...s.strokes,
+                    [t.id]: { ...t, points: [...msg.points] },
+                },
+                };
+            }
+
+            default:
                 return s;
-        }
+            }
         }),
     }));

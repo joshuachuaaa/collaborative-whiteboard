@@ -7,13 +7,12 @@ services:
       dockerfile: docker/Dockerfile.api
     environment:
       REDIS_URL: redis://redis:6379/0
-
-      DB_URL: postgresql://wb_user:wb_pass@postgres:5432/whiteboard
+      DB_URL:    postgresql+asyncpg://wb_user:wb_pass@postgres:5432/whiteboard
     ports:
       - "8000:8000"
     depends_on:
       - redis
-      - postgres                
+      - postgres
 
   redis:
     image: redis:7-alpine
@@ -23,13 +22,13 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER:     wb_user
+      POSTGRES_USER: wb_user
       POSTGRES_PASSWORD: wb_pass
-      POSTGRES_DB:       whiteboard
+      POSTGRES_DB: whiteboard
+    ports:
+      - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"              
-
+      - ./docker/postgres:/docker-entrypoint-initdb.d  
 volumes:
   pg_data:
