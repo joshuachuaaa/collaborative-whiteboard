@@ -27,6 +27,7 @@ export default function Whiteboard() {
   const [avgMs, setAvgMs] = useState(0);
   const stats = useRef({ lastT: performance.now(), sum: 0, count: 0 });
 
+  // Timer
   useEffect(() => {
     const timer = setInterval(() => {
       if (stats.current.count) {
