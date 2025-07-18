@@ -16,7 +16,7 @@
 | 🖊️ Smooth strokes | Catmull-Rom spline smoothing @ 60 FPS |
 | 🔴 Live multi-user view | WebSocket ⇄ Redis Pub/Sub fan-out (no sticky sessions) |
 | ↩️ Undo / Redo | Stroke-level history, per user |
-| 🧹 Eraser & hit-testing | Spatial R-tree keeps O(1) responsiveness |
+| 🧹 Eraser & hit-testing |  |
 | 🗄️ Auto-snapshot & replay | Redis Streams ➜ Postgres JSONB snapshot every 300 events |
 | 🚢 One-command deploy | Docker Compose locally; Render.com starter blueprint |
 
