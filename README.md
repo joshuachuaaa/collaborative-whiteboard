@@ -3,7 +3,7 @@
 > Lightweight (yet snappy) collaborative whiteboard written in **React + Konva** on the front end and **FastAPI + Redis + Websockets** on the back end. Draw, erase, undo/redo—together—in ~<100 ms round-trip.
 
 <p align="center">
-  <img src="assets/gif.gif" alt="Demo GIF" width="80%" />
+  <img src="assets/gif.gif" alt="Demo GIF" width="90%" />
 </p>
 
 
